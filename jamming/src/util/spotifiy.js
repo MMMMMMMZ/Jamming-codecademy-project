@@ -24,27 +24,24 @@ const spotify = {
         }
     },
 
-    search(term) {
+    async search(term) {
         const accessToken = spotify.getAccessToken()
-        return fetch(`https://api.spotify.com/v1/search?type=track&q=${term}`, {
+        const Response = await fetch(`https://api.spotify.com/v1/search?type=track&q=${term}`, {
             headers: {
                 Authorization: `Bearer ${accessToken}`
             }
-        }).then(Response => {
-            return Response.json
-        }).then(jsonResponse => {
-            if (!jsonResponse.tracks) {
-                return [];
-            }
-
-            return jsonResponse.tracks.items.map(track => ({
-                id: track.id,
-                name: track.name,
-                artist: track.artists[0].name,
-                album: track.album.name,
-                uri: track.uri
-            }))
-        })
+        });
+        const jsonResponse = Response.json;
+        if (!jsonResponse.tracks) {
+            return [];
+        }
+        return jsonResponse.tracks.items.map(track => ({
+            id: track.id,
+            name: track.name,
+            artist: track.artists[0].name,
+            album: track.album.name,
+            uri: track.uri
+        }));
     }
 
 }
