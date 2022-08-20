@@ -13,15 +13,35 @@ const spotify = {
 
         if (accessTokenMatch && expiresInMatch) {
             accessToken = accessTokenMatch[1]
-            const expires_in = Number(expiresInMatch[1])
+            const expiresIn = Number(expiresInMatch[1])
 
-            window.setTimeout(() => { accessToken = '', expires_in * 1000 })
-            window.history.pushState('Acess Token', null, '/')
+            window.setTimeout(() => accessToken = '', expiresIn * 1000);
+            window.history.pushState('Access Token', null, '/');
             return accessToken
         } else {
             const accessUrl = `https://accounts.spotify.com/authorize?client_id=${clientID}&response_type=token&scope=playlist-modify-public&redirect_uri=${redirectUri}`
             window.location = accessUrl
         }
+    },
+
+    async search(term) {
+        const accessToken = spotify.getAccessToken()
+        const Response = await fetch(`https://api.spotify.com/v1/search?type=track&q=${term}`, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`
+            }
+        });
+        const jsonResponse = Response.json;
+        if (!jsonResponse.tracks) {
+            return [];
+        }
+        return jsonResponse.tracks.items.map(track => ({
+            id: track.id,
+            name: track.name,
+            artist: track.artists[0].name,
+            album: track.album.name,
+            uri: track.uri
+        }));
     }
 
 }
