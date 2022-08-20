@@ -1,5 +1,5 @@
 const clientID = "df845b81aa6f4eb3b4552fd43b342ef6"
-const redirectUri = 'http://localhost:3000/'
+const redirectUri = 'https://Jamming-with-MMZ.surge.sh'
 let accessToken;
 
 const spotify = {
