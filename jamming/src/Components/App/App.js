@@ -16,20 +16,9 @@ class App extends React.Component {
     this.search = this.search.bind(this)
 
     this.state = {
-      searchResults : [
-        {name:"track 1", artist: "artist 1", album: "album 1", id: 1},
-        {name:"track 2", artist: "artist 2", album: "album 2", id: 2},
-        {name:"track 3", artist: "artist 3", album: "album 3", id: 3}
-      ],
-
+      searchResults : [],
       playlistName: "New Playlist",
-
-      playlistTracks: [
-        {name:"playlist track 1", artist: "playlist artist 1", album: "playlist album 1", id: 6},
-        {name:"playlist track 2", artist: "playlist artist 2", album: "playlist album 2", id: 9},
-        {name:"playlist track 3", artist: "playlist artist 3", album: "playlist album 3", id: 11}
-      ]
-
+      playlistTracks: []
     }
   }
 
@@ -56,9 +45,15 @@ class App extends React.Component {
 
   savePlaylist () {
     const trackUris = this.state.playlistTracks.map(track => track.uri)
+    spotify.savePlaylist(this.state.playlistName, trackUris).then(() => {
+      this.setState({
+        playlistName: 'New Playlist',
+        playlistTracks: []
+      })
+    })
   }
 
-  search (term) {
+  search(term) {
     spotify.search(term).then(searchResults => {
       this.setState({searchResults: searchResults})
     })
