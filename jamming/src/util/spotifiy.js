@@ -25,7 +25,6 @@ const spotify = {
     },
 
     async search(term) {
-        console.log(term)
         const accessToken = spotify.getAccessToken()
         const response = await fetch(`https://api.spotify.com/v1/search?type=track&q=${term}`, {
             headers: {
@@ -36,7 +35,6 @@ const spotify = {
         const jsonResponse = await response.json();
 
         if (!jsonResponse.tracks) {
-            console.log("NO TRACKS")
             return [];
         }
         return jsonResponse.tracks.items.map(track => ({
